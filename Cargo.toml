@@ -1,0 +1,17 @@
+[package]
+name = "programmable_metronome"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+android-activity = "0.6.0"
+slint = {version = "1.15.1", features = ["backend-android-activity-06"]}
+
+
+[lib]
+name = "parogrammable_metronome"
+crate-type = ["cdylib"]
+
+
+[build-dependencies]
+slint-build = "1.15.1"

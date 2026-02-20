@@ -1,0 +1,17 @@
+import {Palette} from "palette.slint";
+import { Control } from "control.slint";
+
+
+component BeatCounter inherits Rectangle {
+    private property <int> actualBeat: Control.actualBeat;
+    Text {
+        text: actualBeat;
+    }
+}
+
+export component MetronomePanel inherits Rectangle {
+    background: Palette.primary;
+    BeatCounter {
+        width: 50px;
+    }
+}
