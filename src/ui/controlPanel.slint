@@ -1,0 +1,37 @@
+import { Button} from "std-widgets.slint";
+import {Palette} from "palette.slint";
+
+component MetronomeButton inherits Rectangle {
+    
+    //later polygons or icons instead text
+    in-out property <string> text;
+
+    background:  Palette.secondary;
+    Text {
+        text: text;
+    }
+    TouchArea {
+        
+    }
+}
+
+component PlayStopButton inherits MetronomeButton {
+    text: "play";
+}
+component ResetButton inherits MetronomeButton {
+    text: "reset";
+}
+component RepeatButton inherits MetronomeButton {
+    text: "repeat";
+}
+
+
+
+
+export component ControlPanel {
+    HorizontalLayout {
+        ResetButton {}
+        PlayStopButton {}
+        RepeatButton {}
+    }
+}

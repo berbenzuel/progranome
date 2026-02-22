@@ -1,0 +1,13 @@
+export global Logic {
+
+    //metronome def
+    in-out property <int> numerator: 0; //that's what is above in signature
+    in-out property <int> denominator: 0; //that's what is below in signature
+    in-out property <int> tempo: 0;
+    in-out property <int> actual-beat: 0;
+    
+    
+    pure callback play-button-pressed();
+    pure callback reset-button-pressed();
+    pure callback repeat-button-pressed();
+}

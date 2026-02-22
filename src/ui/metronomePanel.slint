@@ -1,17 +1,39 @@
 import {Palette} from "palette.slint";
-import { Control } from "control.slint";
+import { Logic } from "logic.slint";
+import { HorizontalBox } from "std-widgets.slint";
 
 
 component BeatCounter inherits Rectangle {
-    private property <int> actualBeat: Control.actualBeat;
+    background: red;
     Text {
-        text: actualBeat;
+        text: Logic.actual-beat;
+
+    }
+}
+
+component Signature inherits Rectangle {
+    Text {
+        text: Logic.numerator + "/" + Logic.denominator;
+    }
+}
+component Tempo {
+    Text {
+        text: Logic.tempo + " bpm";
     }
 }
 
 export component MetronomePanel inherits Rectangle {
     background: Palette.primary;
-    BeatCounter {
-        width: 50px;
+    
+    HorizontalLayout {
+        padding: 15px;
+        padding-right: 30px;
+
+        BeatCounter {}
+        VerticalLayout {
+            Signature {}
+            Tempo {}
+        }
     }
+    
 }

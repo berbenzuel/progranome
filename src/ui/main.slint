@@ -1,22 +1,17 @@
 import {Palette} from "palette.slint";
 import { MetronomePanel } from "metronomePanel.slint";
-
-import { VerticalBox } from "std-widgets.slint";
-
+import { ControlPanel } from "controlPanel.slint";
+import { Logic } from "logic.slint";
 
 
 export component MainWindow inherits Window {
-    width: 100px;
-    height: 100px;
-    full-screen: true;
-    no-frame: true;
 
-    background: Palette.background;
 
-    VerticalBox {
+    VerticalLayout {
         padding: 15px;
-        MetronomePanel {
-            width: parent.width;
-        }
+        MetronomePanel {}
+        ControlPanel {}
     }
 }
+
+export { Logic }
