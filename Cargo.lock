@@ -1900,7 +1900,6 @@ dependencies = [
  "i-slint-core",
  "i-slint-renderer-skia",
  "jni",
- "ndk 0.8.0",
  "ndk 0.9.0",
  "raw-window-handle",
 ]
@@ -2821,7 +2820,6 @@ dependencies = [
  "log",
  "ndk-sys 0.5.0+25.2.9519653",
  "num_enum",
- "raw-window-handle",
  "thiserror 1.0.69",
 ]
 
@@ -3611,6 +3609,7 @@ dependencies = [
 name = "progranome"
 version = "0.1.0"
 dependencies = [
+ "log",
  "slint",
  "slint-build",
 ]

@@ -5,8 +5,10 @@ export global Logic {
     in-out property <int> denominator: 0; //that's what is below in signature
     in-out property <int> tempo: 0;
     in-out property <int> actual-beat: 0;
-    
-    
+
+    in-out property <bool> repeat: false;
+    in-out property <bool> playing;
+
     pure callback play-button-pressed();
     pure callback reset-button-pressed();
     pure callback repeat-button-pressed();

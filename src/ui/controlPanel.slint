@@ -1,22 +1,42 @@
 import { Button} from "std-widgets.slint";
 import {Palette} from "palette.slint";
+import { Logic } from "logic.slint";
 
 component MetronomeButton inherits Rectangle {
     
     //later polygons or icons instead text
     in-out property <string> text;
 
+    callback clicked();
+
     background:  Palette.secondary;
     Text {
         text: text;
     }
     TouchArea {
-        
+        clicked => {
+            root.clicked();
+        }
     }
 }
 
 component PlayStopButton inherits MetronomeButton {
     text: "play";
+
+    clicked => {
+        Logic.play-button-pressed();
+
+        Logic.playing = !Logic.playing;
+    }
+
+    states [
+        playing when Logic.playing: {
+            text: "stop";
+        }
+        stopped when !Logic.playing: {
+            text: "play";
+        }
+    ]
 }
 component ResetButton inherits MetronomeButton {
     text: "reset";

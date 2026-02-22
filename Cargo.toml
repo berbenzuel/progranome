@@ -4,7 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-slint = {version = "1.15.1", features = ["backend-android-activity-06", "backend-android-activity-05"]}
+slint = {version = "1.15.1", features = ["backend-android-activity-06"]}
+log = "0.4.29"
 
 
 [lib]
