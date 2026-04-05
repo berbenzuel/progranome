@@ -9,8 +9,8 @@ export component MainWindow inherits Window {
 
     in-out property <int> actual-beat: 0;
 
-    in-out property <[MetronomeUnit]> all-units;
-    in-out property <MetronomeUnit> active-unit;
+    in-out property <[MetronomeUnit]> metronome-model;
+    in-out property <int> index: -1;
 
     in-out property <bool> repeat: false;
     in-out property <bool> playing;
@@ -33,6 +33,10 @@ export component MainWindow inherits Window {
             height: 250px;
             spacing: 15px;
             MetronomePanel {
+                numerator: index >= 0 ? metronome-model[index].numerator : 4;
+                denominator: index >= 0 ? metronome-model[index].denominator : 4;
+                tempo: index >= 0 ? metronome-model[index].tempo : 120;
+                actual-beat: actual-beat;
                 
             }
             ControlPanel {
@@ -44,7 +48,7 @@ export component MainWindow inherits Window {
         }
         
         unit-panel := UnitPanel {
-            model: all-units;
+            model: root.metronome-model;
         }
     }
 }

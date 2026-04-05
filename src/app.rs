@@ -1,5 +1,5 @@
 use std::rc::Rc;
-use slint::{ComponentHandle, Timer, TimerMode, VecModel};
+use slint::{ComponentHandle, ModelRc, Timer, TimerMode, VecModel};
 use tinyaudio::{run_output_device, OutputDeviceParameters};
 use crate::MainWindow;
 use crate::MetronomeUnit;
@@ -23,17 +23,23 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
 
 
 
+    //intit model from save or scratch
     let model = Rc::from(
         VecModel::from(
             vec! [
-                MetronomeUnit::new(3, 4, 120, 3),
-                MetronomeUnit::new(6, 7, 150, 3)
+                MetronomeUnit::new(4, 4, 120, 8),
             ]
         )
     );
 
-    let mut app_state = AppState::new(&model);
-    app_state.push(MetronomeUnit::new(4, 2, 100, 4));
+    let app_state = Rc::from(AppState::new(model.clone()));
+    main.set_metronome_model(ModelRc::from(model));
+
+
+    next(&main, app_state.clone() );
+
+
+
 
 
     main.on_play_button_pressed(move || {
@@ -44,6 +50,7 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
                 timer.stop();
             }
             else {
+                let app_state = app_state.clone();
                 timer.start(
                     TimerMode::Repeated,
                     std::time::Duration::from_secs(1),
@@ -52,7 +59,7 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
 
                             //here it is crashing coz i dont have any metronomeunit, and it is trying to mod with 0-
                             
-                            let numerator = ui.get_active_unit().numerator;
+                            let numerator = app_state.selected_unit().unwrap().numerator; // fix unwrap
                             let mut beat = ui.get_actual_beat();
                             beat = ((beat) % numerator) +1;
                             ui.set_actual_beat(beat);
@@ -89,4 +96,12 @@ async fn tick(params: OutputDeviceParameters, frequency: f32) {
         }
     }).unwrap();
     async_std::task::sleep(std::time::Duration::from_millis(100)).await;
+}
+
+fn next(main_window: &MainWindow, app_state: Rc<AppState>) {
+    main_window.set_index(
+        match app_state.next() {
+            Some(index) => index.try_into().unwrap(), //fix unwrap
+            None => -1
+    });
 }

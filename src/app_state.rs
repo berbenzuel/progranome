@@ -1,6 +1,6 @@
 use std::cell::Cell;
 use std::rc::Rc;
-use slint::VecModel;
+use slint::{Model, VecModel};
 use crate::MetronomeUnit;
 
 
@@ -11,17 +11,51 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub fn new(model: &Rc<VecModel<MetronomeUnit>>) -> Self {
+    pub fn new(model: Rc<VecModel<MetronomeUnit>>) -> Self {
         Self {
-            model: model.clone(),
-            selected_index: Cell::from(None)
+            model,
+            selected_index: Cell::from(None),
         }
     }
 
-    pub fn push(&mut self, unit: MetronomeUnit) {
+    pub fn push(&self, unit: MetronomeUnit) {
         self.model.push(unit)
     }
 
+    pub fn model(&self) -> Rc<VecModel<MetronomeUnit>> { self.model.clone() }
 
+    pub fn next(&self) -> Option<usize> {
+        let mut index = self.selected_index.get();
+        match index {
+            Some( i) => {
+                if let  Some( mut active_unit) = self.model.row_data(i) {
+                    active_unit.set_active(false);
+                }
+                index = Some(i + 1);
+            }
+            None => {
+                if self.model.row_count() == 0 {
+                    return None;
+                }
+                index = Some(0)
+            }
+        }
+        if let  Some( mut active_unit) = self.model.row_data(index.unwrap()) {
+            active_unit.set_active(true);
+        }
+        self.selected_index.set(index);
+        index
+    }
+    pub fn selected_index(&self) -> Option<usize> {
+        self.selected_index.get()
+    }
+
+    pub fn selected_unit(&self) -> Option<MetronomeUnit> {
+        if let Some(index) = self.selected_index.get()
+        && let Some(unit) = self.model.row_data(index) {
+            return Some(unit)
+        }
+        None
+    }
 
 }

@@ -6,17 +6,19 @@ component MetronomeButton inherits Rectangle {
     height: 60px;
     //later polygons or icons instead text
     in-out property <string> text;
+    in-out property <bool> disabled: false;
 
 
     callback clicked();
 
     border-radius: root.width;
 
-    background:  Palette.accent;
+    background: disabled ? Palette.accent-disabled : Palette.accent;
     Text {
         text: text;
-        color: Palette.background;
+        color: disabled ? Palette.background-disabled : Palette.background;
     }
+
     TouchArea {
         clicked => {
             root.clicked();
@@ -71,6 +73,9 @@ export component ControlPanel inherits Rectangle {
     callback play-stop();
     callback reset();
     callback repeat();
+
+    callback enable-play-button();
+    callback disable-play-button();
 
     HorizontalLayout {
         width: root.width - 60px;
