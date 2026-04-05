@@ -1,0 +1,92 @@
+import { Button} from "std-widgets.slint";
+import {Palette} from "palette.slint";
+
+component MetronomeButton inherits Rectangle {
+    
+    height: 60px;
+    //later polygons or icons instead text
+    in-out property <string> text;
+
+
+    callback clicked();
+
+    border-radius: root.width;
+
+    background:  Palette.accent;
+    Text {
+        text: text;
+        color: Palette.background;
+    }
+    TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+}
+
+component PlayStopButton inherits MetronomeButton {
+    text: "play";
+    out property <bool> playing: false;
+    clicked => {
+        playing = !playing;
+    }
+
+    states [
+        playing when playing: {
+            text: "stop";
+        }
+        stopped when !playing: {
+            text: "play";
+        }
+    ]
+}
+component ResetButton inherits MetronomeButton {
+    text: "reset";
+}
+component RepeatButton inherits MetronomeButton {
+    out property <bool> repeated: false;
+
+    clicked => {
+        repeated = !repeated;
+    }
+    states [
+        repeated when repeated: {
+            text:  "repeated";
+        }
+        once when !repeated: {
+            text: "once";
+        }
+    ]
+
+    text: "repeat";
+}
+
+
+export component ControlPanel inherits Rectangle {
+    width: 100%;
+
+    out property <bool> playing: play-stop.playing;
+    out property <bool> repeated: repeat.repeated;
+
+    callback play-stop();
+    callback reset();
+    callback repeat();
+
+    HorizontalLayout {
+        width: root.width - 60px;
+        spacing: 15px;
+        alignment: center;
+        reset := ResetButton { 
+            width: 30%;
+            clicked => { root.reset(); }
+        }
+        play-stop := PlayStopButton {
+            width: 30%;
+            clicked => { root.play-stop(); }
+        }
+        repeat := RepeatButton {
+            width: 30%;
+            clicked => { root.repeat(); }
+        }
+    }
+}

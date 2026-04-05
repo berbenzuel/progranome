@@ -1,17 +1,50 @@
 import {Palette} from "palette.slint";
 import { MetronomePanel } from "metronomePanel.slint";
-import { ControlPanel } from "controlPanel.slint";
-import { Logic } from "logic.slint";
-
+import { ControlPanel } from "control_panel.slint";
+import {MetronomeUnit} from "metronome_unit.slint";
+import { UnitPanel } from "unit_panel.slint";
 
 export component MainWindow inherits Window {
 
 
+    in-out property <int> actual-beat: 0;
+
+    in-out property <[MetronomeUnit]> all-units;
+    in-out property <MetronomeUnit> active-unit;
+
+    in-out property <bool> repeat: false;
+    in-out property <bool> playing;
+
+    pure callback play-button-pressed();
+    pure callback reset-button-pressed();
+    pure callback repeat-button-pressed();
+
+
+    background: Palette.background;
+
+    default-font-size: 20px;
+    
+
     VerticalLayout {
         padding: 15px;
-        MetronomePanel {}
-        ControlPanel {}
+        padding-top: 40px;
+        spacing: 15px;
+        VerticalLayout {
+            height: 250px;
+            spacing: 15px;
+            MetronomePanel {
+                
+            }
+            ControlPanel {
+                
+                play-stop => { root.play-button-pressed(); }
+                repeat => { root.repeat-button-pressed(); }
+                reset => { reset-button-pressed(); }
+            }
+        }
+        
+        unit-panel := UnitPanel {
+            model: all-units;
+        }
     }
 }
-
-export { Logic }

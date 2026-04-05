@@ -3,15 +3,32 @@ name = "progranome"
 version = "0.1.0"
 edition = "2024"
 
+
 [dependencies]
 slint = {version = "1.15.1", features = ["backend-android-activity-06"]}
 log = "0.4.29"
+tinyaudio = { version = "2.0.0" }
+async-std = "1.13.2"
 
 
-[lib]
-name = "progranome"
-crate-type = ["cdylib"]
+#[lib]
+#name = "progranome"
+#path = "src/lib.rs"
+#crate-type = ["cdylib"]
+#
 
 
 [build-dependencies]
 slint-build = "1.15.1"
+
+
+[package.metadata.android]
+build_targets = ["aarch64-linux-android"]
+
+[package.metadata.android.sdk]
+max_sdk_version = 29
+min_sdk_version = 26
+target_sdk_version = 33
+
+[package.metadata.android.application]
+label = "progranome"

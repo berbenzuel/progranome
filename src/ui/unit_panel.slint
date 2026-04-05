@@ -1,0 +1,44 @@
+import { Palette } from "palette.slint";
+import {MetronomeUnit} from "metronome_unit.slint";
+import { Button } from "std-widgets.slint";
+
+
+export component Unit inherits Rectangle {
+    in-out property <MetronomeUnit> unit;
+
+    height: 60px;
+    background: Palette.primary;
+
+    HorizontalLayout {
+        Text {
+            text: unit.count + "x";
+        }
+        HorizontalLayout {
+            Text {
+                text: unit.numerator + "/" + unit.denominator;
+            }
+
+            Text {
+                text: unit.tempo + " bpm";
+            }
+        }
+
+        Button {
+            text: "delete";
+        }
+
+    }
+}
+
+export component UnitPanel inherits Rectangle {
+    
+    in-out property <[MetronomeUnit]> model;
+    background: Palette.secondary;
+
+    VerticalLayout {
+        height: 100%;
+        for unit in model: Unit {
+            unit: unit;
+        }
+    }
+}
