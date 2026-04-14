@@ -4,7 +4,7 @@
 pub mod metronome_unit;
 pub mod app_state;
 pub mod app;
-
+mod timer_unit;
 
 slint::include_modules!();
 
