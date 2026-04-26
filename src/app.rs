@@ -28,6 +28,8 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
         VecModel::from(
             vec! [
                 MetronomeUnit::new(4, 4, 120, 8),
+                MetronomeUnit::new(4, 7, 120, 9),
+                MetronomeUnit::new(7, 6, 120, 5),
             ]
         )
     );
@@ -99,9 +101,9 @@ fn on_play_button_pressed(main_weak: Weak<MainWindow>, timer: Rc<Timer>, app_sta
                 if let Some(munit) = model.row_data(i) {
                     let duration = std::time::Duration::from_millis(calc_duration(munit.tempo, munit.denominator).try_into().unwrap());
 
-                    vec.extend((0..munit.count)
+                    vec.extend((0..munit.count*munit.numerator)
                         .map(|metronome_unit_index| {
-                            return TimerUnit::new(duration, false, i, metronome_unit_index.clone() as usize)
+                            return TimerUnit::new(duration, false, i, (metronome_unit_index.clone() % munit.numerator) as usize)
                         }));
                 }
             }
@@ -118,12 +120,11 @@ fn process(timer: Rc<Timer>, app_state: Rc<AppState>, main_window: Weak<MainWind
         TimerMode::Repeated,
         Duration::default(),
         move || {
-            debug!("{}", data.back().unwrap().beat());
-            match data.pop_back() {
+            match data.pop_front() {
                 Some(value) => {
                     timer.set_interval(value.duration());
                     async_std::task::spawn(tick( value.accent()));
-                    _ = set_beat(main_window.clone(), app_state.clone(), value.index() as i32, value.beat() as i32 );
+                    _ = set_beat(main_window.clone(), app_state.clone(), value.index() as i32, value.beat() as i32 + 1);
                 }
                 None => timer.stop()
             }
