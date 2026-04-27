@@ -22,14 +22,14 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
 
 
 
-
+    //test data
     //intit model from save or scratch
     let model = Rc::from(
         VecModel::from(
             vec! [
-                MetronomeUnit::new(4, 4, 120, 8),
-                MetronomeUnit::new(4, 7, 120, 9),
-                MetronomeUnit::new(7, 6, 120, 5),
+                MetronomeUnit::new(4, 4, 120, 2),
+                MetronomeUnit::new(4, 7, 120, 4),
+                MetronomeUnit::new(7, 6, 120, 6),
             ]
         )
     );
@@ -133,16 +133,12 @@ fn process(timer: Rc<Timer>, app_state: Rc<AppState>, main_window: Weak<MainWind
 }
 
 
-async fn move_beat(main_window: Weak<MainWindow>, numerator: i32) {
-    let handler = main_window.upgrade().unwrap();
-    let mut beat = handler.get_actual_beat();
-    beat = ((beat) % numerator) +1;
-    handler.set_actual_beat(beat);
-}
-
-fn tick_unit(app_state: Rc<AppState>) {
-
-}
+// async fn move_beat(main_window: Weak<MainWindow>, numerator: i32) {
+//     let handler = main_window.upgrade().unwrap();
+//     let mut beat = handler.get_actual_beat();
+//     beat = ((beat) % numerator) +1;
+//     handler.set_actual_beat(beat);
+// }
 fn calc_duration(bpm: i32, denominator: i32) -> usize{
     if bpm == 0 || denominator == 0 {
         return 0;

@@ -25,13 +25,14 @@ export component MainWindow inherits Window {
 
     default-font-size: 20px;
     
-
+    
     VerticalLayout {
-        padding: 15px;
+        width: 100%;
         padding-top: 40px;
         spacing: 15px;
+        padding-left: 15px;
+        padding-right: 15px;
         VerticalLayout {
-            height: 250px;
             spacing: 15px;
             MetronomePanel {
                 numerator: index >= 0 ? metronome-model[index].numerator : 4;

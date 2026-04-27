@@ -71,7 +71,7 @@ impl AppState {
         }
 
         //sets active unit to inactive
-        let mut old_index = self.selected_index.get();
+        let old_index = self.selected_index.get();
         if let Some(i) = old_index
         && let  Some( mut active_unit) = self.model.row_data(i) {
             active_unit.set_active(false);

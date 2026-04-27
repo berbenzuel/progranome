@@ -7,11 +7,12 @@ component MetronomeButton inherits Rectangle {
     //later polygons or icons instead text
     in-out property <string> text;
     in-out property <bool> disabled: false;
-
+    min-width: 40px;  
+    
 
     callback clicked();
 
-    border-radius: root.width;
+    border-radius: 20px;
 
     background: disabled ? Palette.accent-disabled : Palette.accent;
     Text {
@@ -27,7 +28,6 @@ component MetronomeButton inherits Rectangle {
 }
 
 component PlayStopButton inherits MetronomeButton {
-    text: "play";
     out property <bool> playing: false;
     clicked => {
         playing = !playing;
@@ -35,15 +35,15 @@ component PlayStopButton inherits MetronomeButton {
 
     states [
         playing when playing: {
-            text: "stop";
+            text: "s";
         }
         stopped when !playing: {
-            text: "play";
+            text: "p";
         }
     ]
 }
 component ResetButton inherits MetronomeButton {
-    text: "reset";
+    text: "r";
 }
 component RepeatButton inherits MetronomeButton {
     out property <bool> repeated: false;
@@ -53,20 +53,16 @@ component RepeatButton inherits MetronomeButton {
     }
     states [
         repeated when repeated: {
-            text:  "repeated";
+            text:  "r";
         }
         once when !repeated: {
-            text: "once";
+            text: "o";
         }
     ]
-
-    text: "repeat";
 }
 
 
 export component ControlPanel inherits Rectangle {
-    width: 100%;
-
     out property <bool> playing: play-stop.playing;
     out property <bool> repeated: repeat.repeated;
 
@@ -77,20 +73,24 @@ export component ControlPanel inherits Rectangle {
     callback enable-play-button();
     callback disable-play-button();
 
+    width: 100%;
+
     HorizontalLayout {
-        width: root.width - 60px;
+        width: parent.width;
+        padding-left: 30px;
+        padding-right: 30px;
         spacing: 15px;
-        alignment: center;
+        alignment: stretch;
         reset := ResetButton { 
-            width: 30%;
+            horizontal-stretch: 1;
             clicked => { root.reset(); }
         }
         play-stop := PlayStopButton {
-            width: 30%;
+            horizontal-stretch: 1;
             clicked => { root.play-stop(); }
         }
         repeat := RepeatButton {
-            width: 30%;
+            horizontal-stretch: 1;
             clicked => { root.repeat(); }
         }
     }

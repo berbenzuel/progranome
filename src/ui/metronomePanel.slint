@@ -16,18 +16,34 @@ component Signature inherits Rectangle {
     in-out property <int> numerator;
     in-out property <int> denominator;
 
+    width: 140px;
+    height: 75px;
+    border-radius: 15px;
     background: Palette.secondary;
     Text {
         text: numerator + "/" + denominator;
+        font-size: 80px;
         color: Palette.accent;
     }
 }
 component Tempo {
     in-out property <int> value;
-    Text {
-        text: value + " bpm";
-        color: Palette.accent;
+    HorizontalLayout {
+        spacing: 5px;
+        alignment: center;
+        Text {
+            text: value;
+            font-size: 32px;
+            color: Palette.accent;
+        }
+        Text {
+            text: "bpm";
+            vertical-alignment: center;
+            font-size: 16px;
+            color: Palette.accent;
+        }
     }
+    
 }
 
 export component MetronomePanel inherits Rectangle {
@@ -36,16 +52,26 @@ export component MetronomePanel inherits Rectangle {
     in-out property <int> actual-beat;
     in-out property <int> tempo;
     background: Palette.primary;
+
     
+    border-radius: 30px;
     HorizontalLayout {
+        alignment: space-between;
         padding: 15px;
         padding-right: 30px;
+        spacing: 15px;
 
         BeatCounter {
             value: actual-beat;
         }
         VerticalLayout {
+            height: 140px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            alignment: stretch;
+            spacing: 5px;
             Signature {
+                vertical-stretch: 1;
                 numerator: numerator;
                 denominator: denominator;
             }
