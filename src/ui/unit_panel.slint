@@ -4,27 +4,56 @@ import { Button } from "std-widgets.slint";
 
 
 export component Unit inherits Rectangle {
+    in property <bool> selected: false;
     in-out property <MetronomeUnit> unit;
+    
+
+    border-radius: 20px;
 
     height: 60px;
-    background: Palette.primary;
+    background: unit.active ? Palette.accent : Palette.secondary;
+
+    property <length> font-size: 24px;
 
     HorizontalLayout {
+        alignment: space-between;
+        padding: 10px;
+        
         Text {
+            vertical-alignment: center;
             text: unit.count + "x";
+            color: Palette.background;
+            font-size: font-size;
         }
+
         HorizontalLayout {
+            spacing: 10px;
             Text {
+                vertical-alignment: center;
                 text: unit.numerator + "/" + unit.denominator;
+                color: Palette.background;
+                font-size: font-size;
+            }
+            HorizontalLayout {
+                Text {
+                vertical-alignment: center;
+                text: unit.tempo;
+                color: Palette.background;
+                font-size: font-size;
             }
 
             Text {
-                text: unit.tempo + " bpm";
+                vertical-alignment: center;
+                text:  " bpm";
+                color: Palette.background;
+                font-size: 14px;
             }
+            }
+        
         }
 
         Button {
-            text: "delete";
+            text: "d";
         }
 
     }
@@ -33,13 +62,16 @@ export component Unit inherits Rectangle {
 export component UnitPanel inherits Rectangle {
     
     in-out property <[MetronomeUnit]> model;
-    background: Palette.secondary;
-
+    background: Palette.primary;
+    border-radius: 30px;
     VerticalLayout {
+        padding: 15px;
+        spacing: 10px;
         height: 100%;
         for unit in model: Unit {
             unit: unit;
         }
+
 
     }
 }

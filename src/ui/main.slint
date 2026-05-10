@@ -6,7 +6,7 @@ import { UnitPanel } from "unit_panel.slint";
 
 export component MainWindow inherits Window {
 
-
+    in property <bool> is-android: true;
     in-out property <int> actual-beat: 1;
 
     in-out property <[MetronomeUnit]> metronome-model;
@@ -32,6 +32,7 @@ export component MainWindow inherits Window {
         spacing: 15px;
         padding-left: 15px;
         padding-right: 15px;
+        padding-bottom: is-android ? 48px : 34px;
         VerticalLayout {
             spacing: 15px;
             MetronomePanel {
@@ -49,7 +50,7 @@ export component MainWindow inherits Window {
             }
         }
         
-        unit-panel := UnitPanel {
+        UnitPanel {
             model: root.metronome-model;
         }
     }
