@@ -86,6 +86,7 @@ fn on_play_button_pressed(main_weak: Weak<MainWindow>, timer: Rc<Timer>, app_sta
 
         if main.get_playing() {
             timer.stop();
+            debug!("timer stopped")
         }
         else {
             // if model.iter().count() == 0 {
