@@ -1,0 +1,8 @@
+export global ButtonLogic {
+    pure callback play-button-pressed();
+    pure callback repeat-button-pressed();
+    pure callback reset-button-pressed();
+
+    in-out property <bool> playing: false;
+    in-out property <bool> repeating: false;
+}

@@ -1,74 +1,56 @@
 import { Button} from "std-widgets.slint";
 import {Palette} from "palette.slint";
+import { ButtonLogic } from "logic.slint";
 
 component MetronomeButton inherits Rectangle {
     
-    height: 60px;
     //later polygons or icons instead text
     in-out property <string> text;
-    in-out property <bool> disabled: false;
-    min-width: 40px;  
     
+    in-out property <bool> disabled: false;
 
     callback clicked();
-
+    
+    height: 60px;
     border-radius: 20px;
-
+    min-width: 40px;  
+    
     background: disabled ? Palette.accent-disabled : Palette.accent;
+
     Text {
-        text: text;
+        text: parent.text;
         color: disabled ? Palette.background-disabled : Palette.background;
     }
 
     TouchArea {
         clicked => {
-            root.clicked();
+            parent.clicked();
         }
     }
 }
 
-component PlayStopButton inherits MetronomeButton {
-    out property <bool> playing: false;
+component PlayButton inherits MetronomeButton {
+    
     clicked => {
-        playing = !playing;
+        ButtonLogic.play-button-pressed();
+        debug("play clicked");
+        ButtonLogic.playing = !ButtonLogic.playing;
     }
-
-    states [
-        playing when playing: {
-            text: "s";
-        }
-        stopped when !playing: {
-            text: "p";
-        }
-    ]
+    text: ButtonLogic.playing ? "p" : "s";
 }
 component ResetButton inherits MetronomeButton {
     text: "r";
 }
 component RepeatButton inherits MetronomeButton {
-    out property <bool> repeated: false;
-
     clicked => {
-        repeated = !repeated;
+        ButtonLogic.repeat-button-pressed();
+        debug("repead clicked")
     }
-    states [
-        repeated when repeated: {
-            text:  "r";
-        }
-        once when !repeated: {
-            text: "o";
-        }
-    ]
+    text: ButtonLogic.repeating ? "R" : "r";
 }
 
 
 export component ControlPanel inherits Rectangle {
-    out property <bool> playing: play-stop.playing;
-    out property <bool> repeated: repeat.repeated;
-
-    callback play-stop();
-    callback reset();
-    callback repeat();
 
     callback enable-play-button();
     callback disable-play-button();
@@ -83,15 +65,13 @@ export component ControlPanel inherits Rectangle {
         alignment: stretch;
         reset := ResetButton { 
             horizontal-stretch: 1;
-            clicked => { root.reset(); }
         }
-        play-stop := PlayStopButton {
+        play := PlayButton {
+            
             horizontal-stretch: 1;
-            clicked => { root.play-stop(); }
         }
         repeat := RepeatButton {
             horizontal-stretch: 1;
-            clicked => { root.repeat(); }
         }
     }
 }

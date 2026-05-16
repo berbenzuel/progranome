@@ -1,3 +1,4 @@
+use crate::ButtonLogic;
 use std::collections::VecDeque;
 use std::rc::Rc;
 use std::time::Duration;
@@ -17,7 +18,7 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
     let main_weak = main.as_weak();
 
 
-
+    let button_logic = main.global::<ButtonLogic>();
     let timer = Rc::from(Timer::default());
 
 
@@ -41,7 +42,7 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
 
 
 
-    main.on_play_button_pressed(move || on_play_button_pressed(main_weak.clone(), timer.clone(), app_state.clone(), model.clone()));
+    button_logic.on_play_button_pressed(move || on_play_button_pressed(main_weak.clone(), timer.clone(), app_state.clone(), model.clone()));
 
 
     main.run().or(Err(Box::from("MainWindow")))
@@ -83,39 +84,36 @@ fn set_beat(main_window: Weak<MainWindow>, app_state: Rc<AppState>, index: i32, 
 fn on_play_button_pressed(main_weak: Weak<MainWindow>, timer: Rc<Timer>, app_state: Rc<AppState>, model: Rc<VecModel<MetronomeUnit>> ) {
     let handle = main_weak.clone();
     if let Some(main) = handle.upgrade() {
+        let button_logic = main.global::<ButtonLogic>();
 
-        if main.get_playing() {
+        if button_logic.get_playing() {
             timer.stop();
-            debug!("timer stopped")
+            debug!("timer stopped");
+            return;
         }
-        else {
-            // if model.iter().count() == 0 {
-            //     return;
-            // }
 
-            let app_state = app_state.clone();
-            let mut vec = VecDeque::new();
+        let app_state = app_state.clone();
+        let mut vec = VecDeque::new();
 
-            let start = app_state.selected_index().unwrap_or_else(|| 0);
+        let start = app_state.selected_index().unwrap_or_else(|| 0);
 
-            for i in start..app_state.model().row_count() {
-                if let Some(munit) = model.row_data(i) {
-                    let duration = std::time::Duration::from_millis(calc_duration(munit.tempo, munit.denominator).try_into().unwrap());
+        for i in start..app_state.model().row_count() {
+            if let Some(munit) = model.row_data(i) {
+                let duration = std::time::Duration::from_millis(calc_duration(munit.tempo, munit.denominator).try_into().unwrap());
 
-                    vec.extend((0..munit.count*munit.numerator)
-                        .map(|metronome_unit_index| {
-                            return TimerUnit::new(duration, false, i, (metronome_unit_index.clone() % munit.numerator) as usize)
-                        }));
-                }
+                vec.extend((0..munit.count*munit.numerator)
+                    .map(|metronome_unit_index| {
+                        return TimerUnit::new(duration, false, i, (metronome_unit_index.clone() % munit.numerator) as usize)
+                    }));
             }
-
-            process(timer, app_state, main_weak, vec);
-
         }
+
+        start_timer(timer, app_state, main_weak, vec);
+
     }
 }
 
-fn process(timer: Rc<Timer>, app_state: Rc<AppState>, main_window: Weak<MainWindow>, mut data:VecDeque<TimerUnit>) {
+fn start_timer(timer: Rc<Timer>, app_state: Rc<AppState>, main_window: Weak<MainWindow>, mut data:VecDeque<TimerUnit>) {
     debug!("start");
     timer.clone().start(
         TimerMode::Repeated,
