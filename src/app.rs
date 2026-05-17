@@ -35,6 +35,7 @@ pub fn start_app() -> Result<(),  Box<dyn std::error::Error>>   {
         )
     );
 
+
     let app_state = Rc::from(AppState::new(model.clone()));
     main.set_metronome_model(ModelRc::from(model.clone()));
 
